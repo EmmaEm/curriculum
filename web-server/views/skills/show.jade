@@ -6,6 +6,9 @@ block content
     input.skill-checkbox(type="checkbox", data-label=skill.id, checked=checked)
     span !{renderSkill(skill)}
 
+  h1.skill-markdown
+    span !{content}
+
   h2 Modules
   ul
     for moduleId in skill.modules

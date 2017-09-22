@@ -1,0 +1,62 @@
+#!/usr/bin/env node
+
+const fs = require('fs')
+
+const digest = require('../digest')
+
+function fsPromise(funcName, params) {
+  return new Promise( (resolve, reject) => {
+    fs[funcName]( ...params, (error, result) => {
+      if(error) {
+        reject(error)
+        return
+      }
+      resolve(result)
+    })
+  })
+}
+
+function makeDirectories() {
+  digest()
+  .then(digestInfo => Object.keys(digestInfo.skills))
+  .then(skillsArray => {
+    const arrOfDirs = []
+    skillsArray.forEach(skill => {
+      skill = skill.replace(/[\'\,\/]/g,'-')
+      arrOfDirs.push(fsPromise('mkdir', ['./skills/' + skill]))
+    })
+  })
+}
+
+function createSampleFiles() {
+  fsPromise('readdir', ['./skills'])
+  .then( folderNames => {
+    const sampleData =
+      `### Welcome\n`+
+      `This is a brief description\n`
+
+    folderNames.forEach( folder => {
+      fsPromise('writeFile', [`./skills/${folder}/README.md`, sampleData])
+    })
+    return true
+  })
+}
+
+function main(args) {
+  if(args.length <= 2 || args.length > 3) {
+    console.log(
+      `Not enough arguments.\n`+
+      `Usage: ./bin/${args[1].match(/[^\/]*$/g)[0]} <dirs | populate>\n\n`+
+      `dirs: Make empty directories based on module folder names\n`+
+      `populate: Create sample README.md files in each skill folder\n`
+    )
+    return
+  }
+
+  ({
+    'dirs': makeDirectories,
+    'populate': createSampleFiles,
+  })[args[2]]()
+}
+
+main(process.argv)

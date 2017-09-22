@@ -31,9 +31,11 @@ module.exports = app => {
     queries.getChecksForUserAndLabels({userId, labels})
       .then(checks => {
         const checked = !!checks[skill.id]
-        response.render('skills/show', {skill, checked, title: skill.name})
+        response.renderMarkdownFile(skill.markdownUrl, 'skills/show', {skill, checked, title: skill.name})
+
       })
       .catch(next)
   })
+
 
 }
