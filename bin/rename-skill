@@ -41,6 +41,12 @@ const renameSkillsWithinModules = () =>
     )
   })
 
+const renameSkillMarkdowns = () =>
+  generateDigest().then(digest => {
+    const skills = digest.skills
+    
+  })
+
 const skillNameToMarkdown = skillName =>
   `- ${skillName}\n`
 
@@ -112,6 +118,7 @@ const yyyymmddhhmmss = () => {
 Promise.all([
   generateMigration(),
   renameSkillsWithinModules(),
+  renameSkillMarkdowns(),
 ]).then(_ => {
   process.exit(0)
 })

@@ -31,11 +31,7 @@ module.exports = app => {
     queries.getChecksForUserAndLabels({userId, labels})
       .then(checks => {
         const checked = !!checks[skill.id]
-<<<<<<< HEAD
-        response.renderMarkdownFile(skill.markdownUrl, 'skills/show', {skill, checked, title: skill.name})
-=======
         response.renderMarkdownFile(skill.markdownFilePath, 'skills/show', {skill, checked, title: skill.name})
->>>>>>> Modified skills related files(digest, views, and route); Modified skillsPopulate script; Removed accidental skills-markdown.js
 
       })
       .catch(next)
