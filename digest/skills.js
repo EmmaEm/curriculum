@@ -15,6 +15,10 @@ module.exports = digest => {
       rawText,
       modules: [],
       path: `/skills/${encodeURIComponent(id)}`,
+<<<<<<< HEAD
+=======
+      markdownFilePath: `/skills/${id}.md`,
+>>>>>>> Modified skills related files(digest, views, and route); Modified skillsPopulate script; Removed accidental skills-markdown.js
     }
     const preExistingSkill = digest.skills[id]
     if (preExistingSkill){
