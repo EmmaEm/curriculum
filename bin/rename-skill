@@ -29,23 +29,45 @@ console.log(
   chalk.magenta(util.inspect(newSkillNames))
 )
 
-const renameSkillsWithinModules = () =>
+const renameSkillsWithinContainer = (container) =>
   generateDigest().then(digest => {
     const skillId = nameToId(currentSkillName)
-    const modules = Object.values(digest.modules).filter(module =>
-      module.skills.includes(skillId)
-    )
+    const containerItems = Object.values(digest[container]).filter(containerItem => {
+
+      const containerValues = Object.values(containerItem)
+
+      let temp
+      if(container === 'modules') {
+        temp = containerItem.skills.includes(skillId)
+      } else if(container === 'skills') {
+        temp = containerValues.includes(skillId)
+      }
+
+      return (temp)
+    })
 
     return Promise.all(
-      modules.map(renameSkillsWithinModule)
+      containerItems.map({
+        modules: renameSkillsWithinModule,
+        skills: renameSkillsWithinMarkdown,
+      }[container])
     )
   })
 
-const renameSkillMarkdowns = () =>
-  generateDigest().then(digest => {
-    const skills = digest.skills
-    
-  })
+const renameSkillsWithinMarkdown = (skill) => {
+  fs.readFile(path.join(__dirname, '..', skill.markdownFilePath))
+    .then(buffer => buffer.toString())
+    .then(rawtext => {
+      console.log(rawtext.replace(/\#.*\n/, ))
+    })
+    .catch(err => {
+      console.error(err)
+    })
+
+  // Read file to get contents - particuarly for header
+  // write file with different header and filename
+  // delete old file
+}
 
 const skillNameToMarkdown = skillName =>
   `- ${skillName}\n`
@@ -75,7 +97,8 @@ const generateMigration = () => {
     chalk.green('creating migration'),
     chalk.magenta(migrationPath)
   )
-  return fs.writeFile(migrationFullPath, contents)
+  // return fs.writeFile(migrationFullPath, contents)
+  return Promise.resolve(true)
 }
 
 const migrationContents = () =>
@@ -117,8 +140,8 @@ const yyyymmddhhmmss = () => {
 
 Promise.all([
   generateMigration(),
-  renameSkillsWithinModules(),
-  renameSkillMarkdowns(),
+  renameSkillsWithinContainer('modules'),
+  renameSkillsWithinContainer('skills'),
 ]).then(_ => {
   process.exit(0)
 })
