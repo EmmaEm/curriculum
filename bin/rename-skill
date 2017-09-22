@@ -11,6 +11,9 @@ const usage = () => {
   console.log(
 `Usage:
   rename-skill CURRENT_SKILL_NAME NEW_SKILL_NAME [NEW_SKILL_NAME [NEW_SKILL_NAME […]]]
+  
+  both CURRENT_SKILL_NAME and NEW_SKILL_NAME should be the skill as written in the markdown.
+  i.e. with spaces and backticks etc. - wrap entire skill name in quotes.
 `
   )
   process.exit(1)
