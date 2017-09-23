@@ -11,7 +11,7 @@ const usage = () => {
   console.log(
 `Usage:
   rename-skill CURRENT_SKILL_NAME NEW_SKILL_NAME [NEW_SKILL_NAME [NEW_SKILL_NAME […]]]
-  
+
   both CURRENT_SKILL_NAME and NEW_SKILL_NAME should be the skill as written in the markdown.
   i.e. with spaces and backticks etc. - wrap entire skill name in quotes.
 `
@@ -58,18 +58,23 @@ const renameSkillsWithinContainer = (container) =>
   })
 
 const renameSkillsWithinMarkdown = (skill) => {
-  fs.readFile(path.join(__dirname, '..', skill.markdownFilePath))
+  const oldMarkdownPath = path.join(__dirname, '..', skill.markdownFilePath)
+  const newMarkdownPath = path.join(
+    __dirname,
+    '..',
+    'skills'
+  ) + '/' + newSkillNames[0].replace(/[\'\,\/\s]/g, '-') + '.md'
+
+  return fs.readFile(oldMarkdownPath)
     .then(buffer => buffer.toString())
     .then(rawtext => {
-      console.log(rawtext.replace(/\#.*\n/, ))
+      const newText = rawtext.replace(/\#.*\n/, `# ${newSkillNames[0]}\n`)
+      return fs.writeFile(newMarkdownPath, newText)
     })
+    .then( () => fs.unlink(oldMarkdownPath))
     .catch(err => {
       console.error(err)
     })
-
-  // Read file to get contents - particuarly for header
-  // write file with different header and filename
-  // delete old file
 }
 
 const skillNameToMarkdown = skillName =>
@@ -100,8 +105,7 @@ const generateMigration = () => {
     chalk.green('creating migration'),
     chalk.magenta(migrationPath)
   )
-  // return fs.writeFile(migrationFullPath, contents)
-  return Promise.resolve(true)
+  return fs.writeFile(migrationFullPath, contents)
 }
 
 const migrationContents = () =>
