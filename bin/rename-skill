@@ -5,7 +5,7 @@ const util = require('util')
 const fs = require('fs-extra')
 const chalk = require('chalk')
 const generateDigest = require('../digest')
-const nameToId = require('../digest/utils').nameToId
+const {nameToId, rawTextToName} = require('../digest/utils')
 
 const usage = () => {
   console.log(
@@ -63,7 +63,7 @@ const renameSkillsWithinMarkdown = (skill) => {
     __dirname,
     '..',
     'skills'
-  ) + '/' + newSkillNames[0].replace(/[\'\,\/\s]/g, '-') + '.md'
+  ) + '/' + rawTextToName(newSkillNames[0]) + '.md'
 
   return fs.readFile(oldMarkdownPath)
     .then(buffer => buffer.toString())
