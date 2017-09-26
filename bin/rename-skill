@@ -32,7 +32,7 @@ console.log(
   chalk.magenta(util.inspect(newSkillNames))
 )
 
-const renameSkillsWithinContainer = (container) =>
+const renameSkills = (container) =>
   generateDigest().then(digest => {
     const skillId = nameToId(currentSkillName)
     const containerItems = Object.values(digest[container]).filter(containerItem => {
@@ -147,8 +147,8 @@ const yyyymmddhhmmss = () => {
 
 Promise.all([
   generateMigration(),
-  renameSkillsWithinContainer('modules'),
-  renameSkillsWithinContainer('skills'),
+  renameSkills('modules'),
+  renameSkills('skills'),
 ]).then(_ => {
   process.exit(0)
 })
