@@ -5,7 +5,7 @@ const util = require('util')
 const fs = require('fs-extra')
 const chalk = require('chalk')
 const generateDigest = require('../digest')
-const {nameToId, rawTextToName} = require('../digest/utils')
+const nameToId = require('../digest/utils').nameToId
 
 const usage = () => {
   console.log(
@@ -32,68 +32,68 @@ console.log(
   chalk.magenta(util.inspect(newSkillNames))
 )
 
-const renameSkills = (container) =>
-  generateDigest().then(digest => {
-    const skillId = nameToId(currentSkillName)
-    const containerItems = Object.values(digest[container]).filter(containerItem => {
+const renameSkills = () => {
+  const skillId = nameToId(currentSkillName)
+  const getSkillName = () => {
+    return generateDigest()
+      .then(digest => {
+        const modules = Object.values(digest.modules).filter(module => {
+          return module.skills.includes(skillId)
+        })
+        const skills = Object.values(digest.skills).filter(skill => {
+          return Object.values(skill).includes(skillId)
+        })
+        return {modules, skills}
+      })
+  }
 
-      const containerValues = Object.values(containerItem)
+  const skillNameToMarkdown = skillName =>
+    `- ${skillName}\n`
 
-      let temp
-      if(container === 'modules') {
-        temp = containerItem.skills.includes(skillId)
-      } else if(container === 'skills') {
-        temp = containerValues.includes(skillId)
-      }
-
-      return (temp)
+  const writeSkillName = ({modules, skills}) => {
+    const arrayOfModulePromises = modules.map(module => {
+      const absolutePath = path.resolve(__dirname, `..${module.path}/README.md`)
+      console.log(
+        '%s %s',
+        chalk.green('updating module'),
+        module.path
+      )
+      return fs.readFile(absolutePath).then(markdown => {
+        markdown = markdown.toString().replace(
+          "\n"+skillNameToMarkdown(currentSkillName),
+          "\n"+newSkillNames.map(skillNameToMarkdown).join('')
+        )
+        return fs.writeFile(absolutePath, markdown)
+      })
     })
 
-    return Promise.all(
-      containerItems.map({
-        modules: renameSkillsWithinModule,
-        skills: renameSkillsWithinMarkdown,
-      }[container])
-    )
-  })
-
-const renameSkillsWithinMarkdown = (skill) => {
-  const oldMarkdownPath = path.join(__dirname, '..', skill.markdownFilePath)
-  const newMarkdownPath = path.join(
-    __dirname,
-    '..',
-    'skills'
-  ) + '/' + rawTextToName(newSkillNames[0]) + '.md'
-
-  return fs.readFile(oldMarkdownPath)
-    .then(buffer => buffer.toString())
-    .then(rawtext => {
-      const newText = rawtext.replace(/\#.*\n/, `# ${newSkillNames[0]}\n`)
-      return fs.writeFile(newMarkdownPath, newText)
+    const arrayOfSkillPromises = skills.map(skill => {
+      const oldMarkdownPath = path.join(__dirname, '..', skill.markdownFilePath)
+      const newMarkdownPath = path.join(
+        __dirname,
+        '..',
+        'skills'
+      ) + '/' + nameToId(newSkillNames[0]) + '.md'
+      return fs.readFile(oldMarkdownPath)
+        .then(buffer => buffer.toString())
+        .then(skillContent => {
+          const newText = skillContent.replace(/\#.*\n/, `# ${newSkillNames[0]}\n`)
+          return fs.writeFile(newMarkdownPath, newText)
+        })
+        .then( (error) => {
+          if (error) {
+            console.log(`\nError in ${newMarkdownPath}\n`);
+            console.log(error)
+          }
+          return fs.unlink(oldMarkdownPath)
+        })
     })
-    .then( () => fs.unlink(oldMarkdownPath))
-    .catch(err => {
-      console.error(err)
-    })
-}
 
-const skillNameToMarkdown = skillName =>
-  `- ${skillName}\n`
+    return Promise.all([...arrayOfModulePromises, ...arrayOfSkillPromises])
+  }
 
-const renameSkillsWithinModule = (module) => {
-  const absolutePath = path.resolve(__dirname, `..${module.path}/README.md`)
-  console.log(
-    '%s %s',
-    chalk.green('updating module'),
-    module.path
-  )
-  return fs.readFile(absolutePath).then(markdown => {
-    markdown = markdown.toString().replace(
-      "\n"+skillNameToMarkdown(currentSkillName),
-      "\n"+newSkillNames.map(skillNameToMarkdown).join('')
-    )
-    return fs.writeFile(absolutePath, markdown)
-  })
+  return getSkillName()
+    .then(writeSkillName)
 }
 
 const generateMigration = () => {
@@ -147,8 +147,7 @@ const yyyymmddhhmmss = () => {
 
 Promise.all([
   generateMigration(),
-  renameSkills('modules'),
-  renameSkills('skills'),
+  renameSkills(),
 ]).then(_ => {
   process.exit(0)
 })
