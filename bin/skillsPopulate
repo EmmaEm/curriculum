@@ -82,12 +82,12 @@ function createSampleFiles(skillsId, skillsName) {
   console.log('skill Title length ---', skillsId.length)
   for(let i = 0; i < skillsId.length; i++){
     const sampleData =
-      `# ${skillsName[i]}\n` +
-      `_description tbd_\n` +
-      `## Resources\n` +
-      `### Reading\n` +
-      `_nothing here yet, please add something_\n` +
-      `### Watching\n` +
+      `# ${skillsName[i]}\n\n` +
+      `_description tbd_\n\n` +
+      `## Resources\n\n` +
+      `### Reading\n\n` +
+      `_nothing here yet, please add something_\n\n` +
+      `### Watching\n\n` +
       `_nothing here yet, please add something_\n`
 
     fsPromise('writeFile', [`./skills/${skillsId[i]}.md`, sampleData])
