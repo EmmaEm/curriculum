@@ -68,7 +68,7 @@ const renameSkills = () => {
     })
 
     const arrayOfSkillPromises = skills.map(skill => {
-      const oldMarkdownPath = path.join(__dirname, '..', skill.markdownFilePath)
+      const oldMarkdownPath = path.join(__dirname, '..', `/skills/${skill.id}.md`)
       const newMarkdownPath = path.join(
         __dirname,
         '..',
