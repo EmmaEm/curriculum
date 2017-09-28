@@ -118,11 +118,26 @@ module.exports = app => {
         })
     }
 
-    response.renderMarkdownFile = function(relativeFilePath=request.path, viewPage, extraArgs){
+    response.markdownFileToHTML = function(relativeFilePath=request.path){
       const absoluteFilePath = path.resolve(__dirname, '..', '.'+relativeFilePath)
-      fs.readFile(absoluteFilePath)
+      return fs.readFile(absoluteFilePath)
         .then(file => {
-          response.renderMarkdown(file.toString(), viewPage, extraArgs)
+          return renderMarkdown(file.toString())
+        })
+    }
+
+    response.renderMarkdownFileToHTML = function(relativeFilePath=request.path, viewParams, viewPath){
+      response.markdownFileToHTML(relativeFilePath)
+        .then(markdownHTML => {
+          viewParams.content = markdownHTML
+          response.render(viewPath, viewParams)
+        })
+    }
+
+    response.renderMarkdownFile = function(relativeFilePath=request.path){
+      response.markdownFileToHTML(relativeFilePath)
+        .then(markdownHTML => {
+          response.renderMarkdown(markdownHTML)
         })
         .catch(error => {
           if (error.message.includes('ENOENT')){
@@ -133,7 +148,7 @@ module.exports = app => {
         })
     }
 
-    response.renderMarkdown = function(markdown, viewPage='markdown', extraArgs){
+    response.renderMarkdown = function(markdown){
 
       renderMarkdown(markdown, (error, content) => {
         if (error) return response.renderServerError(error)
@@ -148,10 +163,7 @@ module.exports = app => {
           sourceUrl: 'https://github.com/GuildCrafts/curriculum/blob/master'+path,
           editeUrl: 'https://github.com/GuildCrafts/curriculum/edit/master'+path,
         }
-        for(let extraArgsItem in extraArgs) {
-          file[extraArgsItem] = extraArgs[extraArgsItem]
-        }
-        response.render(viewPage, file)
+        response.render('markdown', file)
       })
     }
 
