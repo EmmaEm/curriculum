@@ -76,7 +76,24 @@ const filterSkillsList = filter => {
   })
 }
 
+const hideEmptyFilters = (filterElements) => {
+  filterElements.each((index, filter) => {
+    const filters = ($(filter).text() || '').trim().toLowerCase().split(/\s+/)
+    let hasSkills = false
+    $('.skills-list .skills-list-list > li').each((i, skill) => {
+      if(matchesFilters(filters, $(skill).text())){
+        hasSkills = true
+        return false //exits loop 
+      }
+    })
+    if (hasSkills === false){
+      $(filter).hide()
+    }
+  })
+}
+
 $(() => {
+  hideEmptyFilters($('.skills-list-filter'))
   filterSkillsList( $('.skills-list-filter-input').val())
 })
 
