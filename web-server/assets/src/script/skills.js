@@ -76,14 +76,14 @@ const filterSkillsList = filter => {
   })
 }
 
-const hideEmptyFilters = (filterElements) => {
-  filterElements.each((index, filter) => {
+const hideEmptyFilters = () => {
+  $('.skills-list-filter').each((index, filter) => {
     const filters = ($(filter).text() || '').trim().toLowerCase().split(/\s+/)
     let hasSkills = false
     $('.skills-list .skills-list-list > li').each((i, skill) => {
       if(matchesFilters(filters, $(skill).text())){
         hasSkills = true
-        return false //exits loop 
+        return false //exits loop
       }
     })
     if (hasSkills === false){
@@ -93,7 +93,7 @@ const hideEmptyFilters = (filterElements) => {
 }
 
 $(() => {
-  hideEmptyFilters($('.skills-list-filter'))
+  hideEmptyFilters()
   filterSkillsList( $('.skills-list-filter-input').val())
 })
 
