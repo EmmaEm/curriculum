@@ -1,4 +1,4 @@
-
+ 
 exports.up = knex =>
   knex.schema.createTable('module_ratings', table => {
     table.string('user_id').notNullable().index()

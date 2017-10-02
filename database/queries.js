@@ -38,9 +38,32 @@ const hashChecksByLabel = checks => {
   return checkedMap
 }
 
+const addOrUpdateStarRating = (userId, moduleId, rating) => {
+  return knex.raw(`
+    INSERT INTO "module_ratings" ( "user_id", "module_id", "rating") values (?, ?, ?)
+    ON CONFLICT ("module_id", "user_id")
+    DO UPDATE SET "rating" = ?
+    `, [userId, moduleId, rating, rating])
+    .then(() => console.log('Rating has been added.'))
+}
+
+const getStarRating = (userId, moduleId) => {
+  return knex('module_ratings')
+    .select('rating')
+    .where({user_id: userId, module_id: moduleId})
+    .then(rating => rating)
+}
+
+const getModuleRatingStats = (moduleId) => {
+  return knex('module_ratings')
+    .avg('rating')
+    .count('rating')
+}
+
 module.exports = {
   getChecksForUserAndLabels,
   getCheckLogsForUsers,
+  addOrUpdateStarRating,
+  addOrUpdateStarRating,
+  getModuleRatingStats,
 }
-
-
