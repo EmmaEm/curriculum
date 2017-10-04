@@ -19,17 +19,18 @@ block content
 
   textarea.hidden.skills-data= JSON.stringify(currentModuleSkills)
   
-  div.star-rating
-    h3.stars
-      - var fullStars = Math.round(parseInt(stars.avg))
-      - var emptyStars = 5 - fullStars
-      while fullStars > 0
-        &#9733
-        - fullStars--
-      while emptyStars > 0
-        &#9734
-        - emptyStars--
-    p.review-count (!{stars.count} reviews)
+  if stars.count > 0
+    div.star-rating
+      h3.stars
+        - var fullStars = Math.round(parseInt(stars.avg))
+        - var emptyStars = 5 - fullStars
+        while fullStars > 0
+          &#9733
+          - fullStars--
+        while emptyStars > 0
+          &#9734
+          - emptyStars--
+      p.review-count (!{stars.count} reviews)
 
   .markdown-body !{content}
   
