@@ -58,6 +58,7 @@ const getModuleRatingStats = (moduleId) => {
   return knex('module_ratings')
     .avg('rating')
     .count('rating')
+    .first()
 }
 
 module.exports = {

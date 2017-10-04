@@ -21,10 +21,11 @@ block content
   
   div.star-rating
     h3.stars
-      - var emptyStars = 5 - Math.round(stars.avg)
-      while Math.round(stars.avg) > 0
+      - var fullStars = Math.round(parseInt(stars.avg))
+      - var emptyStars = 5 - fullStars
+      while fullStars > 0
         &#9733
-        - stars.avg--
+        - fullStars--
       while emptyStars > 0
         &#9734
         - emptyStars--

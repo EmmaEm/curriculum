@@ -5,6 +5,7 @@ const fs = require('fs-extra')
 const escapeHTML = require('jade').runtime.escape
 const renderMarkdown = require('./renderMarkdown')
 const queries = require('../database/queries')
+const utils = require('../digest/utils')
 
 module.exports = app => {
 
@@ -145,11 +146,17 @@ module.exports = app => {
         const file = {
           content,
           title,
-          stars: {avg: 3.3, count: 5},
           sourceUrl: 'https://github.com/GuildCrafts/curriculum/blob/master'+path,
           editeUrl: 'https://github.com/GuildCrafts/curriculum/edit/master'+path,
         }
-        response.render('markdown', file)
+        queries.getModuleRatingStats(utils.nameToId(title))
+          .then(stats => {
+            file.stars = stats
+            console.log('=================>',stats);
+            response.render('markdown', file)
+            
+          })
+        // response.render('markdown', file)
       })
     }
 
