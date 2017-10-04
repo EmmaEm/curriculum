@@ -20,14 +20,15 @@ block content
   textarea.hidden.skills-data= JSON.stringify(currentModuleSkills)
   
   div.star-rating
-    h3.stars 
-      while stars > 0
+    h3.stars
+      - var emptyStars = 5 - Math.round(stars.avg)
+      while Math.round(stars.avg) > 0
         &#9733
-        - stars--
-      //- while 5 - stars > 0
-      //-   &#9734
-      //-   - stars--
-    p.review-count (7 reviews)
+        - stars.avg--
+      while emptyStars > 0
+        &#9734
+        - emptyStars--
+    p.review-count (!{stars.count} reviews)
 
   .markdown-body !{content}
   
