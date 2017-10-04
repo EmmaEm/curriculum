@@ -145,6 +145,7 @@ module.exports = app => {
         const file = {
           content,
           title,
+          stars: 3,
           sourceUrl: 'https://github.com/GuildCrafts/curriculum/blob/master'+path,
           editeUrl: 'https://github.com/GuildCrafts/curriculum/edit/master'+path,
         }

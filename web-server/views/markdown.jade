@@ -18,5 +18,16 @@ block content
           a(href="/phases/#{phase.number}/dashboard") Dashboard
 
   textarea.hidden.skills-data= JSON.stringify(currentModuleSkills)
+  
+  div.star-rating
+    h3.stars 
+      while stars > 0
+        &#9733
+        - stars--
+      //- while 5 - stars > 0
+      //-   &#9734
+      //-   - stars--
+    p.review-count (7 reviews)
 
   .markdown-body !{content}
+  
