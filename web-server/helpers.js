@@ -142,19 +142,19 @@ module.exports = app => {
         const path = response.path.match(/\/$/) ? response.path+'README.md' : response.path
 
         const title = getTitleFromHTML(content)
+        const moduleId = utils.nameToId(title)
 
         const file = {
           content,
           title,
+          moduleId,
           sourceUrl: 'https://github.com/GuildCrafts/curriculum/blob/master'+path,
           editeUrl: 'https://github.com/GuildCrafts/curriculum/edit/master'+path,
         }
-        queries.getModuleRatingStats(utils.nameToId(title))
+        queries.getModuleRatingStats(moduleId)
           .then(stats => {
             file.stars = stats
-            console.log('=================>',stats);
             response.render('markdown', file)
-            
           })
         // response.render('markdown', file)
       })
