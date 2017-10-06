@@ -13,5 +13,7 @@ $(() => {
 
 $(document).on('click', '.stars', event => {
   console.log(event.toElement.attributes['data-star-number'].value)
-  fetch({})
+  fetch({
+    
+  })
 })

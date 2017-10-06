@@ -36,13 +36,13 @@ block content
 
   .markdown-body !{content}
   
-  p.hidden.user-id !{currentUser.id}
-  p.hidden.module-id !{moduleId}
+  //- p.hidden.user-id !{currentUser.id}
+  //- p.hidden.module-id !{moduleId}
  
   form(action='/newStuff', method='post')
     input(type='text', name='userId', value=currentUser.id)
     input(type='text', name='moduleId', value=moduleId)
-    input(type='number', min='1', max='5', name='rating')
+    input(type='number', min='1', max='5', name='rating' required)
     input(type='submit', name='1' value=`submit`)
 
     

@@ -62,6 +62,7 @@ const getModuleRatingStats = (moduleId) => {
     .first()
 }
 
+
 module.exports = {
   getChecksForUserAndLabels,
   getCheckLogsForUsers,
