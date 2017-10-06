@@ -38,7 +38,7 @@ const hashChecksByLabel = checks => {
   return checkedMap
 }
 
-const addOrUpdateStarRating = (userId, moduleId, rating) => {
+const upsertStarRating = (userId, moduleId, rating) => {
   return knex.raw(`
     INSERT INTO "module_ratings" ( "user_id", "module_id", "rating") values (?, ?, ?)
     ON CONFLICT ("module_id", "user_id")
@@ -65,7 +65,6 @@ const getModuleRatingStats = (moduleId) => {
 module.exports = {
   getChecksForUserAndLabels,
   getCheckLogsForUsers,
-  addOrUpdateStarRating,
-  addOrUpdateStarRating,
+  upsertStarRating,
   getModuleRatingStats,
 }

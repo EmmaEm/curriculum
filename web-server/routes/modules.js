@@ -45,4 +45,11 @@ module.exports = app => {
     response.renderFile(request.path)
   })
 
+  app.post('/newStuff', (request, response, next) => {
+    console.log(request.body)
+    response.send(request.body)
+    // queries.upsertStarRating(request.body.userId, request.body.moduleId, request.body.rating )
+      // .then( response.redirect(`/modules/${request.body.moduleId}`))
+      // response.redirect(`back`)
+  })
 }

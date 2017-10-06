@@ -18,7 +18,7 @@ block content
           a(href="/phases/#{phase.number}/dashboard") Dashboard
 
   textarea.hidden.skills-data= JSON.stringify(currentModuleSkills)
-  
+
   //- if stars.count > 0
   div.star-rating
     - var fullStars = Math.round(parseInt(stars.avg))
@@ -36,9 +36,13 @@ block content
 
   .markdown-body !{content}
   
-  p !{currentUser.id}
-  p !{moduleId}
-  //- form.review
-  //-   input
-  //-   button
-  
+  p.hidden.user-id !{currentUser.id}
+  p.hidden.module-id !{moduleId}
+ 
+  form(action='/newStuff', method='post')
+    input(type='text', name='userId', value=currentUser.id)
+    input(type='text', name='moduleId', value=moduleId)
+    input(type='number', min='1', max='5', name='rating')
+    input(type='submit', name='1' value=`submit`)
+
+    

@@ -5,7 +5,9 @@ const commands = require('../../database/commands')
 
 module.exports = app => {
 
+  // NOTE: Is line 9 needed?
   app.use('/api', bodyParser.json())
+  app.use(bodyParser.urlencoded({extended: false}))
 
   app.post('/api/skill-checks/status', (request, response, next) => {
     const userId = request.user.id

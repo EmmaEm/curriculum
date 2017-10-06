@@ -156,7 +156,6 @@ module.exports = app => {
             file.stars = stats
             response.render('markdown', file)
           })
-        // response.render('markdown', file)
       })
     }
 
