@@ -11,9 +11,18 @@ $(() => {
   })
 })
 
-$(document).on('click', '.stars', event => {
-  console.log(event.toElement.attributes['data-star-number'].value)
-  fetch({
-    
+const upsert = (userId, moduleId, rating) => {
+  $.ajax({
+    type: 'POST',
+    url: '/ratings',
+    data: {userId, moduleId, rating},
+    success: $('.star-rating').load(location.href+' .star-rating>*','')
   })
+}
+
+$(document).on('click', '.stars', event => {
+  const userId = $('.inputUserId')[0].value
+  const moduleId = $('.inputModuleId')[0].value
+  const rating = event.toElement.attributes['data-star-number'].value
+  upsert(userId, moduleId, rating)
 })

@@ -38,6 +38,7 @@ module.exports = app => {
 
   app.get('/modules/:moduleName', (request, response, next) => {
     const { moduleName } = request.params
+    response.locals.moduleName = moduleName
     response.renderMarkdownFile(`/modules/${moduleName}/README.md`)
   })
 
@@ -45,8 +46,8 @@ module.exports = app => {
     response.renderFile(request.path)
   })
 
-  app.post('/newStuff', (request, response, next) => {
+  app.post('/ratings', (request, response, next) => {
+    console.log('inside new stuff =======>')
     queries.upsertStarRating(request.body.userId, request.body.moduleId, request.body.rating )
-      .then(response.redirect('back'))
   })
 }

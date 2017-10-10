@@ -19,30 +19,27 @@ block content
 
   textarea.hidden.skills-data= JSON.stringify(currentModuleSkills)
 
-  //- if stars.count > 0
-  div.star-rating
-    - var fullStars = Math.round(parseInt(stars.avg))
-    - var emptyStars = 5 - fullStars || 5
-    - var i = 1
-    while fullStars > 0
-      h3(class='stars' data-star-number=i) &#9733
-      - fullStars--
-      - i++
-    while emptyStars > 0
-      h3(class='stars' data-star-number=i) &#9734
-      - emptyStars--
-      - i++
-    p.review-count (!{stars.count} reviews)
+  if moduleName
+    div.star-rating
+      - var fullStars = Math.round(parseInt(stars.avg)) || 0
+      - var emptyStars = 5 - fullStars
+      - var i = 1
+      while fullStars > 0
+        h3(class='stars' data-star-number=i) &#9733
+        - fullStars--
+        - i++
+      while emptyStars > 0
+        h3(class='stars' data-star-number=i) &#9734
+        - emptyStars--
+        - i++
+      p.review-count (!{stars.count} reviews)
 
   .markdown-body !{content}
   
-  //- p.hidden.user-id !{currentUser.id}
-  //- p.hidden.module-id !{moduleId}
- 
-  form(action='/newStuff', method='post')
-    input(type='text', name='userId', value=currentUser.id)
-    input(type='text', name='moduleId', value=moduleId)
-    input(type='number', min='1', max='5', name='rating' required)
-    input(type='submit', name='1' value=`submit`)
+  form.hidden(action='/ratings', method='post' id='ratingForm')
+    input(type='text', class='inputUserId', name='userId', value=currentUser.id)
+    input(type='text', class='inputModuleId', name='moduleId', value=moduleId)
+    input(type='number', class='inputRating', min='1', max='5', name='rating' required)
+    input(type='submit', class='inputSubmit', name='1' value=`submit`)
 
     
